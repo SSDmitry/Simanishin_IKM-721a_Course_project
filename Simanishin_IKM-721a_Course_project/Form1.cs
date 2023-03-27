@@ -13,6 +13,7 @@ namespace Simanishin_IKM_721a_Course_project
     public partial class Form1 : Form
     {
         private bool Mode = false;
+        private MajorWork MajorObject;
 
         public Form1()
         {
@@ -21,7 +22,10 @@ namespace Simanishin_IKM_721a_Course_project
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            About A = new About();
+            A.tAbout.Start();
+            A.ShowDialog();
+            MajorObject = new MajorWork();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -49,8 +53,11 @@ namespace Simanishin_IKM_721a_Course_project
                 Mode = false;
                 bStart.Text = "Пуск";
                 tClock.Stop();
+                MajorObject.Write(tbInput.Text);
+                MajorObject.Task();
+                label1.Text = MajorObject.Read();
             }
-            else 
+            else
             {
                 tbInput.Enabled = true;
                 Mode = true;
@@ -65,15 +72,15 @@ namespace Simanishin_IKM_721a_Course_project
             tClock.Stop();
             tClock.Start();
 
-            if ((e.KeyChar >= '0' && e.KeyChar <= '9') | (e.KeyChar == (char) 8) | (e.KeyChar == '.') | (e.KeyChar == ' '))
+            if ((e.KeyChar >= '0' && e.KeyChar <= '9') | (e.KeyChar == (char)8) | (e.KeyChar == '.') | (e.KeyChar == ' '))
             {
                 return;
 
             }
-            else 
+            else
             {
                 MessageBox.Show("Неправильний символ", "Помилка");
-                e.KeyChar = (char) 0; 
+                e.KeyChar = (char)0;
             }
         }
     }
