@@ -8,8 +8,19 @@ namespace Simanishin_IKM_721a_Course_project
 {
     internal class MajorWork
     {
+        private System.DateTime TimeBegin;
         private string Data;
         private string Result;
+
+        public void SetTime()
+        {
+            this.TimeBegin = System.DateTime.Now;
+            
+        }
+        public System.DateTime GetTime()
+        {
+            return this.TimeBegin;
+        }
         public void Write(string D)
         {
             this.Data = D;

@@ -26,6 +26,8 @@ namespace Simanishin_IKM_721a_Course_project
             A.tAbout.Start();
             A.ShowDialog();
             MajorObject = new MajorWork();
+            MajorObject.SetTime();
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -82,6 +84,13 @@ namespace Simanishin_IKM_721a_Course_project
                 MessageBox.Show("Неправильний символ", "Помилка");
                 e.KeyChar = (char)0;
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            string s;
+            s = (System.DateTime.Now - MajorObject.GetTime()).ToString();
+            MessageBox.Show(s, "Час роботи програми");
         }
     }
 }
