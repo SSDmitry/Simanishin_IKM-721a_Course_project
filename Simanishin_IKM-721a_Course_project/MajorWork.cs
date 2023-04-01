@@ -41,5 +41,15 @@ namespace Simanishin_IKM_721a_Course_project
                 this.Result = Convert.ToString(false);
             }
         }
+        private string SaveFileName;
+        private string OpenFileName;
+        public void WriteSaveFileName(string S)
+        {
+            this.SaveFileName = S;
+        }
+        public void WriteOpenFileName(string S)
+        {
+            this.OpenFileName = S;
+        }
     }
 }
