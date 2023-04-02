@@ -28,7 +28,7 @@ namespace Simanishin_IKM_721a_Course_project
             A.ShowDialog();
             MajorObject = new MajorWork();
             MajorObject.SetTime();
-
+            MajorObject.Modify = false;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -111,7 +111,8 @@ namespace Simanishin_IKM_721a_Course_project
         {
             if (sfdSave.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show(sfdSave.FileName);
+                MajorObject.WriteSaveFileName(sfdSave.FileName);
+                MajorObject.SaveToFile();
             }
         }
 
