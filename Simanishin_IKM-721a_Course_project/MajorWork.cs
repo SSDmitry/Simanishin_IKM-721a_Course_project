@@ -147,10 +147,10 @@ namespace Simanishin_IKM_721a_Course_project
                 return false;
             else return true;
         }
-        public void NewRec() // новий запис
+        public void NewRec()
         {
-            this.Data = ""; // "" - ознака порожнього рядка
-            this.Result = null; // для string- null
+            this.Data = "";
+            this.Result = null;
         }
     }
 }
