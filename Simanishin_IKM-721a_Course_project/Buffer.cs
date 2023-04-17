@@ -9,8 +9,8 @@ namespace Simanishin_IKM_721a_Course_project
     [Serializable]
     internal class Buffer
     {
-        public string Data;
-        public string Result;
-        public int Key;
+        public string Data; // вхідні дані
+        public string Result; // результат
+        public int Key; // ключ
     }
 }

@@ -13,8 +13,8 @@ namespace Simanishin_IKM_721a_Course_project
 {
     public partial class Form1 : Form
     {
-        private bool Mode = false;
-        private MajorWork MajorObject;
+        private bool Mode = false; //Режим дозволу / заборони введення даних
+        private MajorWork MajorObject; // Створення об'єкта класу MajorWork
 
         public Form1()
         {
@@ -23,12 +23,13 @@ namespace Simanishin_IKM_721a_Course_project
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            About A = new About();
-            A.tAbout.Start();
-            A.ShowDialog();
             MajorObject = new MajorWork();
             MajorObject.SetTime();
-            MajorObject.Modify = false;
+            MajorObject.Modify = false; //заборона запису
+            About A = new About(); //сворення форми About
+            A.tAbout.Start(); //відображення діалогового вікна About
+            A.ShowDialog();
+            this.Mode = true;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -44,7 +45,7 @@ namespace Simanishin_IKM_721a_Course_project
         private void tClock_Tick(object sender, EventArgs e)
         {
             tClock.Stop();
-            MessageBox.Show("the time has passed!");
+            MessageBox.Show("the time has passed!"); // Виведення повідомлення "the time has passed!" на екран
             tClock.Start();
         }
 
@@ -52,20 +53,20 @@ namespace Simanishin_IKM_721a_Course_project
         {
             if (Mode)
             {
-                tbInput.Enabled = false;
+                tbInput.Enabled = false; //Режим заборони введення
                 Mode = false;
-                bStart.Text = "Пуск";
+                bStart.Text = "Пуск"; //зміна тексту на кнопці на "Пуск"
                 tClock.Stop();
-                MajorObject.Write(tbInput.Text);
-                MajorObject.Task();
-                label1.Text = MajorObject.Read();
+                MajorObject.Write(tbInput.Text); //запис даних у об'єкт
+                MajorObject.Task(); //Обробка даних
+                label1.Text = MajorObject.Read(); //Відображення результату
                 пускToolStripMenuItem.Text = "Старт";
             }
             else
             {
-                tbInput.Enabled = true;
+                tbInput.Enabled = true; //Режим дозволу введення
                 Mode = true;
-                bStart.Text = "Стоп";
+                bStart.Text = "Стоп"; //зміна тексту на кнопці на "Стоп"
                 tClock.Start();
                 tbInput.Focus();
                 пускToolStripMenuItem.Text = "Стоп";
@@ -84,7 +85,9 @@ namespace Simanishin_IKM_721a_Course_project
             }
             else
             {
+                tClock.Stop();
                 MessageBox.Show("Неправильний символ", "Помилка");
+                tClock.Start();
                 e.KeyChar = (char)0;
             }
         }
@@ -93,7 +96,7 @@ namespace Simanishin_IKM_721a_Course_project
         {
             string s;
             s = (System.DateTime.Now - MajorObject.GetTime()).ToString();
-            MessageBox.Show(s, "Час роботи програми");
+            MessageBox.Show(s, "Час роботи програми"); //Виведення часу роботи програми і повідомлення "Час роботи програми" на екран
         }
 
         private void вихідToolStripMenuItem_Click(object sender, EventArgs e)
@@ -109,37 +112,37 @@ namespace Simanishin_IKM_721a_Course_project
 
         private void зберегтиЯкToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (sfdSave.ShowDialog() == DialogResult.OK)
+            if (sfdSave.ShowDialog() == DialogResult.OK) //Виклик діалогу збереження файлу
             {
-                MajorObject.WriteSaveFileName(sfdSave.FileName);
+                MajorObject.WriteSaveFileName(sfdSave.FileName); // запис імені файла для збереження
                 MajorObject.Generator();
-                MajorObject.SaveToFile();
+                MajorObject.SaveToFile(); //метод збереження в файл
             }
         }
 
         private void відкритиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ofdOpen.ShowDialog() == DialogResult.OK)
-
+            if (ofdOpen.ShowDialog() == DialogResult.OK) //Виклик діалогу відкриття файлу
             {
-                MessageBox.Show(ofdOpen.FileName);
+                MajorObject.WriteOpenFileName(ofdOpen.FileName); // відкриття файлу
+                MajorObject.ReadFromFile(dgwOpen); // читання даних з файлу
             }
         }
 
         private void проНакопичувачіToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] disks = System.IO.Directory.GetLogicalDrives();
+            string[] disks = System.IO.Directory.GetLogicalDrives(); // строковий масив з логічних дисків
             string disk = "";
             for (int i = 0; i < disks.Length; i++)
             {
                 try
                 {
                     System.IO.DriveInfo D = new System.IO.DriveInfo(disks[i]);
-                    disk += D.Name + "-" + D.TotalSize.ToString() + "-" + D.TotalFreeSpace.ToString() + (char)13;
+                    disk += D.Name + "-" + D.TotalSize.ToString() + "-" + D.TotalFreeSpace.ToString() + (char)13; // змінній присвоюється ім'я диска, загальна кількість місця і вільне місце на диску
                 }
                 catch
                 {
-                    disk += disks[i] + "- не готовий" + (char)13;
+                    disk += disks[i] + "- не готовий" + (char)13; //якщо пристрій не готовий виведення на екран ім'я пристрою і повідомлення "не готовий"
 }
             }
             MessageBox.Show(disk, "Накопичувачі");
@@ -147,20 +150,20 @@ namespace Simanishin_IKM_721a_Course_project
 
         private void роботаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void зберегтиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MajorObject.SaveFileNameExists())
-                MajorObject.SaveToFile();
+            if (MajorObject.SaveFileNameExists()) // задане ім'я файлу існує?
+                MajorObject.SaveToFile(); // зберегти в дані в файл
             else
-                зберегтиЯкToolStripMenuItem_Click(sender, e);
+                зберегтиЯкToolStripMenuItem_Click(sender, e); // зберегти дані в "ім'я файлу", яке буде введене у форму для збереження
         }
         private void новийToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MajorObject.NewRec();
-            tbInput.Clear();
+            tbInput.Clear(); //очистити вміст текст бокса
             label1.Text = "";
         }
 
@@ -169,7 +172,17 @@ namespace Simanishin_IKM_721a_Course_project
             if (MajorObject.Modify)
             if (MessageBox.Show("Дані не були збережені. Продовжити вихід?", "УВАГА",
             MessageBoxButtons.YesNo) == DialogResult.No)
-            e.Cancel = true;
+            e.Cancel = true; // припинити закриття
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void bSearch_Click(object sender, EventArgs e)
+        {
+            MajorObject.Find(tbSearch.Text); //пошук
         }
     }
 }

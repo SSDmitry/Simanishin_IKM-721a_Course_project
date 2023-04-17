@@ -11,28 +11,31 @@ namespace Simanishin_IKM_721a_Course_project
 {
     internal class MajorWork
     {
-        private System.DateTime TimeBegin;
-        private string Data;
-        private string Result;
+        //Поля
+        private System.DateTime TimeBegin; //Час початку роботи
+        private string Data; //вхідні дані
+        private string Result; //поле результату
         public bool Modify;
-        private int Key;
-        public void SetTime()
+        private int Key; // поле ключа
+        public void SetTime() //метод запису початку роботи програми
         {
             this.TimeBegin = System.DateTime.Now;
             
         }
-        public System.DateTime GetTime()
+        public System.DateTime GetTime() //Метод отримання часу завершення програми
         {
             return this.TimeBegin;
         }
-        public void Write(string D)
+        public void Write(string D) //метод записи данных в обьект.
         {
             this.Data = D;
         }
         public string Read()
         {
-            return this.Result;
+            return this.Result; //метод відображення результата
         }
+        //У методі Task реалізується виконання завдання: якщо кількість введених цифр більше 5, 
+        // то результат = true, інакше False.
         public void Task()
         {
             if (this.Data.Length > 5)
@@ -44,88 +47,103 @@ namespace Simanishin_IKM_721a_Course_project
             {
                 this.Result = Convert.ToString(false);
             }
-            this.Modify = true;
+            this.Modify = true; //дозвіл запису
         }
-        private string SaveFileName;
-        private string OpenFileName;
-        public void WriteSaveFileName(string S)
+        private string SaveFileName; //ім'я файлу для запису
+        private string OpenFileName; //ім'я файлу для читання
+        public void WriteSaveFileName(string S) //метод запису даних в об'єкт
         {
-            this.SaveFileName = S;
+            this.SaveFileName = S; //запам'ятати ім'я файлу для запису
         }
         public void WriteOpenFileName(string S)
         {
-            this.OpenFileName = S;
+            this.OpenFileName = S; //запам'ятати ім'я файлу для відкриття
         }
-        public void SaveToFile()
+        //Методи
+        public void SaveToFile() // запис даних в файл
         {
             if (!this.Modify)
                 return;
             try
             {
-                Stream S;
-                if (File.Exists(this.SaveFileName))
-                    S = File.Open(this.SaveFileName, FileMode.Append);
+                Stream S; // створення потоку
+                if (File.Exists(this.SaveFileName)) // існує файл?
+                    S = File.Open(this.SaveFileName, FileMode.Append); // відкриття збереженого файлу
                 else
-                    S = File.Open(this.SaveFileName, FileMode.Create);
-                Buffer D = new Buffer();
+                    S = File.Open(this.SaveFileName, FileMode.Create); // створити файл
+                Buffer D = new Buffer(); // створення буфферной змінної
                 D.Data = this.Data;
                 D.Result = Convert.ToString(this.Result);
                 D.Key = Key;
                 Key++;
-                BinaryFormatter BF = new BinaryFormatter();
+                BinaryFormatter BF = new BinaryFormatter(); // створення об'єкта для форматування
                 BF.Serialize(S, D);
-                S.Flush();
-                S.Close();
-                this.Modify = false;
+                S.Flush(); // очищення буфера потоку
+                S.Close(); // закриття потоку
+                this.Modify = false; // заборона повторного запису
             }
             catch
             {
 
-                MessageBox.Show("Помилка роботи з файлом");
+                MessageBox.Show("Помилка роботи з файлом"); // Виведення на екран повідомлення "Помилка роботи з файлом"
             }
         }
-        public void ReadFromFile(System.Windows.Forms.DataGridView DG) 
+        public void ReadFromFile(System.Windows.Forms.DataGridView DG) //зчитування з файлу
         {
             try
             {
                 if (!File.Exists(this.OpenFileName))
                 {
-                    MessageBox.Show("Файлу немає");
+                    MessageBox.Show("Файлу немає");//Виведення на екран повідомлення "Файлу немає"
                     return;
                 }
-                Stream S;
+                Stream S;//створення потоку
                 Buffer D = new Buffer();
-                S = File.Open(this.OpenFileName, FileMode.Open);
-                object O;
-                BinaryFormatter BF = new BinaryFormatter();
-
+                S = File.Open(this.OpenFileName, FileMode.Open); //зчитування данних з файлу
+                object O;//Буферна зміна для контролюформату
+                BinaryFormatter BF = new BinaryFormatter(); //створення об'єкта для форматування
+                //Формуємо таблицю
+                System.Data.DataTable MT = new System.Data.DataTable();
+                System.Data.DataColumn cKey = new System.Data.DataColumn("Ключ");// формуємо колонку "Ключ"
+                System.Data.DataColumn cInput = new System.Data.DataColumn("Вхідні дані");// формуємо колонку "Вхідні дані"
+                System.Data.DataColumn cResult = new System.Data.DataColumn("Результат");// формуємо колонку "Результат"
+                MT.Columns.Add(cKey);// додавання ключа
+                MT.Columns.Add(cInput);// додавання вхідних даних
+                MT.Columns.Add(cResult);// додавання результату
                 while (S.Position < S.Length)
                 {
-                    O = BF.Deserialize(S);
+                    O = BF.Deserialize(S); //десеріалізація
                     D = O as Buffer;
                     if (D == null) break;
+                    System.Data.DataRow MR;
+                    MR = MT.NewRow();
+                    MR["Ключ"] = D.Key; // Занесення в таблицю номер
+                    MR["Вхідні дані"] = D.Data; // Занесення в таблицю вхідних даних
+                    MR["Результат"] = D.Result; // Занесення в таблицю результатів
+                    MT.Rows.Add(MR);
                 }
-                S.Close();
+                DG.DataSource = MT;
+                S.Close(); //закриття
             }
             catch
             {
-                MessageBox.Show("Помилка файлу");
+                MessageBox.Show("Помилка файлу"); //Висновок на екран повідомлення "Помилка файлу"
             }
-        }
-        public void Generator()
+        } // ReadFromFile закінчився
+        public void Generator() // метод формування ключового поля
         {
             try
             {
-                if (!File.Exists(this.SaveFileName))
+                if (!File.Exists(this.SaveFileName)) // існує файл?
                 {
                     Key = 1;
                     return;
                 }
-                Stream S;
+                Stream S; // створення потоку
                 Buffer D = new Buffer();
-                S = File.Open(this.SaveFileName, FileMode.Open);
-                object O;
-                BinaryFormatter BF = new BinaryFormatter();
+                S = File.Open(this.SaveFileName, FileMode.Open); // відкриття файлу
+                object O; // буферна змінна для контролю формату
+                BinaryFormatter BF = new BinaryFormatter(); // створення елемента для форматування
                 while (S.Position < S.Length)
                 {
                     O = BF.Deserialize(S);
@@ -138,7 +156,7 @@ namespace Simanishin_IKM_721a_Course_project
             }
             catch
             {
-                MessageBox.Show("Помилка файлу");
+                MessageBox.Show("Помилка файлу"); // Виведення на екран повідомлення "Помилка файлу"
             }
         }
         public bool SaveFileNameExists()
@@ -147,10 +165,58 @@ namespace Simanishin_IKM_721a_Course_project
                 return false;
             else return true;
         }
-        public void NewRec()
+        public void NewRec() //новий запис
         {
-            this.Data = "";
-            this.Result = null;
+            this.Data = ""; // "" - ознака порожнього рядка
+            this.Result = null; // для стринг - null
         }
+        public void Find(string Num) // пошук
+        {
+            int N;
+            try
+            {
+                N = Convert.ToInt16(Num); // перетворення номера рядка в int16 для відображення
+            }
+            catch
+            {
+                MessageBox.Show("помилка пошукового запиту"); // Виведення на екран повідомлення "помилка пошукового запиту"
+                return;
+            }
+            try
+            {
+                if (!File.Exists(this.OpenFileName))
+                {
+                    MessageBox.Show("файлу немає"); // Виведення на екран повідомлення "файлу немає"
+                    return;
+                }
+                Stream S; // створення потоку
+                S = File.Open(this.OpenFileName, FileMode.Open); // відкриття файлу
+                Buffer D;
+                object O; // буферна змінна для контролю формату
+                BinaryFormatter BF = new BinaryFormatter(); // створення об'єкта для форматування
+            
+                while (S.Position < S.Length)
+                {
+                    O = BF.Deserialize(S);
+                    D = O as Buffer;
+                    if (D == null) break;
+                    if (D.Key == N) // перевірка дорівнює чи номер пошуку номеру рядка в таблиці
+                    {
+                        string ST;
+                        ST = "Запис містить:" + (char)13 + "No" + Num + "Вхідні дані:" + D.Data + "Результат:" + D.Result;
+                        MessageBox.Show(ST, "Запис знайдена"); // Виведення на екран повідомлення "запис містить", номер, вхідних даних і результат
+                        S.Close();
+                        return;
+                    }
+                }
+                S.Close();
+                MessageBox.Show("Запис не знайдена"); // Виведення на екран повідомлення "Запис не знайдена"
+            }
+            catch
+            {
+                MessageBox.Show("Помилка файлу"); // Виведення на екран повідомлення "Помилка файлу"
+            }
+        } // Find закінчився
+
     }
 }
