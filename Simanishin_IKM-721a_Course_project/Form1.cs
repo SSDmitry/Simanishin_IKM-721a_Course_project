@@ -15,12 +15,30 @@ namespace Simanishin_IKM_721a_Course_project
     {
         private bool Mode = false; //Режим дозволу / заборони введення даних
         private MajorWork MajorObject; // Створення об'єкта класу MajorWork
-
+        ToolStripLabel dateLabel;
+        ToolStripLabel timeLabel;
+        ToolStripLabel infoLabel;
+        Timer timer;
         public Form1()
         {
             InitializeComponent();
+            infoLabel = new ToolStripLabel();
+            infoLabel.Text = "Поточні дата і час:";
+            dateLabel = new ToolStripLabel();
+            timeLabel = new ToolStripLabel();
+            statusStrip1.Items.Add(infoLabel);
+            statusStrip1.Items.Add(dateLabel);
+            statusStrip1.Items.Add(timeLabel);
+            timer = new Timer() { Interval = 1000 };
+            timer.Tick += timer_Tick;
+            timer.Start();
         }
+        void timer_Tick(object sender, EventArgs e)
+        {
+            dateLabel.Text = DateTime.Now.ToLongDateString();
 
+            timeLabel.Text = DateTime.Now.ToLongTimeString();
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             MajorObject = new MajorWork();
@@ -30,6 +48,9 @@ namespace Simanishin_IKM_721a_Course_project
             A.tAbout.Start(); //відображення діалогового вікна About
             A.ShowDialog();
             this.Mode = true;
+
+            toolTip1.SetToolTip(bSearch, "Натисніть на кнопку для пошуку"); 
+            toolTip1.IsBalloon = true;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -108,6 +129,7 @@ namespace Simanishin_IKM_721a_Course_project
         {
             About A = new About();
             A.ShowDialog();
+            A.progressBar1.Hide();
         }
 
         private void зберегтиЯкToolStripMenuItem_Click(object sender, EventArgs e)
@@ -183,6 +205,11 @@ namespace Simanishin_IKM_721a_Course_project
         private void bSearch_Click(object sender, EventArgs e)
         {
             MajorObject.Find(tbSearch.Text); //пошук
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
