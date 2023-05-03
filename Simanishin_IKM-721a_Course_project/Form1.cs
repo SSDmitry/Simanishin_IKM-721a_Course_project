@@ -74,23 +74,24 @@ namespace Simanishin_IKM_721a_Course_project
         {
             if (Mode)
             {
+                tbInput.Enabled = true; //Режим дозволу введення
+                tbInput.Focus();
+                tClock.Start();
+                bStart.Text = "Стоп"; //зміна тексту на кнопці на "Стоп"
+                this.Mode = false;
+                пускToolStripMenuItem.Text = "Стоп";
+
+            }
+            else
+            {
                 tbInput.Enabled = false; //Режим заборони введення
-                Mode = false;
-                bStart.Text = "Пуск"; //зміна тексту на кнопці на "Пуск"
                 tClock.Stop();
+                bStart.Text = "Пуск"; //зміна тексту на кнопці на "Пуск"
+                this.Mode = true;
                 MajorObject.Write(tbInput.Text); //запис даних у об'єкт
                 MajorObject.Task(); //Обробка даних
                 label1.Text = MajorObject.Read(); //Відображення результату
                 пускToolStripMenuItem.Text = "Старт";
-            }
-            else
-            {
-                tbInput.Enabled = true; //Режим дозволу введення
-                Mode = true;
-                bStart.Text = "Стоп"; //зміна тексту на кнопці на "Стоп"
-                tClock.Start();
-                tbInput.Focus();
-                пускToolStripMenuItem.Text = "Стоп";
             }
         }
 
@@ -128,8 +129,8 @@ namespace Simanishin_IKM_721a_Course_project
         private void проПрограмуToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About A = new About();
-            A.ShowDialog();
             A.progressBar1.Hide();
+            A.ShowDialog();
         }
 
         private void зберегтиЯкToolStripMenuItem_Click(object sender, EventArgs e)
@@ -160,7 +161,7 @@ namespace Simanishin_IKM_721a_Course_project
                 try
                 {
                     System.IO.DriveInfo D = new System.IO.DriveInfo(disks[i]);
-                    disk += D.Name + "-" + D.TotalSize.ToString() + "-" + D.TotalFreeSpace.ToString() + (char)13; // змінній присвоюється ім'я диска, загальна кількість місця і вільне місце на диску
+                    disk += D.Name + "-" + (D.TotalSize/1000000000).ToString() + "-" + D.TotalFreeSpace.ToString() + (char)13; // змінній присвоюється ім'я диска, загальна кількість місця і вільне місце на диску
                 }
                 catch
                 {
